@@ -1,3 +1,4 @@
+from custom_components.casambi_mqtt.entities.commands import PublishEntities
 from homeassistant.components import mqtt
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant
@@ -5,7 +6,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import CONF_NETWORK_NAME, DEFAULT_NETWORK_NAME, DOMAIN, MQTT_TOPIC_PREFIX
-from .entities.commands import PublishEntities
 
 
 def setup_platform(
@@ -22,7 +22,7 @@ def setup_platform(
 class CasambiMqttReloadButton(ButtonEntity):
     _mqtt_network_name: str
 
-    def __init__(self, hass: HomeAssistant, network_name: str):
+    def __init__(self, hass: HomeAssistant, network_name: str) -> None:
         self.hass = hass
         self._mqtt_network_name = network_name
         self._attr_name = "Reload Casambi entities"

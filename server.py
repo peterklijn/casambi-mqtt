@@ -2,10 +2,12 @@ import asyncio
 import json
 import logging
 import os
+import sys
+from collections.abc import Awaitable
+from typing import TYPE_CHECKING, Any
 
 import aiomqtt
 import CasambiBt
-from bleak import BLEDevice
 from CasambiBt import Casambi, discover
 from CasambiBt._unit import UnitControl as BtUnitControl
 from CasambiBt._unit import UnitType as BtUnitType
@@ -17,7 +19,17 @@ from custom_components.casambi_mqtt.entities.commands import (
     SetScene,
     TurnOn,
 )
-from custom_components.casambi_mqtt.entities.entities import *
+from custom_components.casambi_mqtt.entities.entities import (
+    Scene,
+    Unit,
+    UnitControl,
+    UnitControlType,
+    UnitState,
+    UnitType,
+)
+
+if TYPE_CHECKING:
+    from bleak import BLEDevice
 
 BROKER = "localhost"
 PORT = 1883
@@ -36,12 +48,14 @@ handler.setFormatter(
 )
 LOGGER.addHandler(handler)
 
+background_tasks = set()
 
-async def log_exceptions(awaitable):
+
+async def log_exceptions(awaitable: Awaitable[Any]) -> Any:
     try:
         return await awaitable
     except aiomqtt.MqttError as e:
-        LOGGER.warning(f"Unhandled exception: {e}")
+        LOGGER.warning("Unhandled exception: %s", e)
 
 
 def to_unit_control_type(t: CasambiBt.UnitControlType) -> UnitControlType:
@@ -103,7 +117,7 @@ async def process_command(
         case PublishEntities.ACTION:
             for scene in casa.scenes:
                 scene_entity = to_scene(scene)
-                asyncio.create_task(
+                task = asyncio.create_task(
                     log_exceptions(
                         client.publish(
                             f"{TOPIC_PREFIX}/{NETWORK_NAME}/scenes/{scene_entity.scene_id}",
@@ -112,6 +126,8 @@ async def process_command(
                         )
                     )
                 )
+                background_tasks.add(task)
+                task.add_done_callback(background_tasks.discard)
         case SetScene.ACTION:
             cmd = SetScene.from_json(payload)
             scene = next(s for s in casa.scenes if s.sceneId == cmd.scene_id)
@@ -127,11 +143,12 @@ async def main() -> None:
 
     if device is None:
         LOGGER.info(
-            "No casambi network specified, store the address of your network in CASAMBI_NETWORK_ADDRESS:"
+            "No casambi network specified, "
+            "store the address of your network in CASAMBI_NETWORK_ADDRESS:"
         )
         for i, d in enumerate(devices):
-            LOGGER.info(f"[{i}]\t{d.address}")
-        exit(0)
+            LOGGER.info("[%d]\t%s", i, d.address)
+        sys.exit(0)
 
     casa = Casambi()
     try:
@@ -142,7 +159,7 @@ async def main() -> None:
 
         def callback(unit: CasambiBt.Unit) -> None:
             entity = to_entity(unit)
-            asyncio.create_task(
+            task = asyncio.create_task(
                 log_exceptions(
                     client.publish(
                         f"{TOPIC_PREFIX}/{NETWORK_NAME}/events/{unit.address}",
@@ -151,6 +168,8 @@ async def main() -> None:
                     )
                 )
             )
+            background_tasks.add(task)
+            task.add_done_callback(background_tasks.discard)
 
         while True:
             try:
@@ -164,12 +183,14 @@ async def main() -> None:
                     )
                     async for message in client.messages:
                         LOGGER.debug(
-                            f"Received command: {message.payload.decode()} on topic: '{message.topic}'"
+                            "Received command: %s on topic: '%s'",
+                            message.payload.decode(),
+                            message.topic,
                         )
                         await process_command(message, casa, client)
             except aiomqtt.MqttError as e:
                 LOGGER.warning(
-                    f"Connection lost ({e}); Reconnecting in {interval} seconds ..."
+                    "Connection lost (%s); Reconnecting in %d seconds ...", e, interval
                 )
                 casa.unregisterUnitChangedHandler(callback)
                 await asyncio.sleep(interval)

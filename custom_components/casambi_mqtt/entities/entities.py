@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import ClassVar, List
+from typing import ClassVar
 
 from dataclasses_json import dataclass_json
 
@@ -28,8 +28,8 @@ class UnitType:
     manufacturer: str
     mode: str
     model: str
-    stateLength: int
-    controls: List[UnitControl]
+    state_length: int
+    controls: list[UnitControl]
 
 
 @dataclass_json

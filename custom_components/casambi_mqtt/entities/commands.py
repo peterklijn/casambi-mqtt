@@ -1,7 +1,7 @@
 import abc
 import json
 from dataclasses import asdict, dataclass
-from typing import ClassVar
+from typing import ClassVar, Self
 
 
 @dataclass
@@ -10,13 +10,13 @@ class BaseCommand(abc.ABC):
     def _action(self) -> str:
         pass
 
-    def to_json(self):
+    def to_json(self) -> str:
         data = asdict(self)
         data.update({"action": self._action()})
         return json.dumps(data)
 
     @classmethod
-    def from_json(cls, json_str: str):
+    def from_json(cls, json_str: str) -> Self:
         data = json.loads(json_str)
         fields = {f.name for f in cls.__dataclass_fields__.values()}
         filtered_data = {key: value for key, value in data.items() if key in fields}

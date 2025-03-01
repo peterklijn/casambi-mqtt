@@ -1,5 +1,6 @@
 from typing import Any
 
+from custom_components.casambi_mqtt.entities.commands import SetScene
 from homeassistant.components import mqtt
 from homeassistant.components.scene import Scene as HAScene
 from homeassistant.core import HomeAssistant
@@ -7,7 +8,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import DOMAIN, MQTT_TOPIC_PREFIX, SCENE_ADD_ENTITIES
-from .entities.commands import SetScene
 from .entities.entities import Scene
 
 
@@ -24,7 +24,7 @@ class CasambiMqttScene(HAScene):
     _attr_casambi_id: int
     _mqtt_network_name: str
 
-    def __init__(self, hass: HomeAssistant, network_name: str, scene: Scene):
+    def __init__(self, hass: HomeAssistant, network_name: str, scene: Scene) -> None:
         self.hass = hass
         self._mqtt_network_name = network_name
         self._attr_casambi_id = scene.scene_id
@@ -33,7 +33,7 @@ class CasambiMqttScene(HAScene):
         self._attr_icon = "mdi:lamps"
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._attr_name
 
     def update_entity(self, scene: Scene) -> None:

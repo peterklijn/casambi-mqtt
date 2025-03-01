@@ -1,4 +1,5 @@
 import voluptuous as vol
+
 from homeassistant.components.mqtt import ReceiveMessage, async_subscribe
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -56,13 +57,15 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             unit = Unit.from_json(msg.payload)
         except ValueError:
             LOGGER.warning(
-                f"Invalid payload received for event, payload: {msg.payload}, topic: {msg.topic}"
+                f"Invalid payload received for event, payload: {msg.payload}, "
+                f"topic: {msg.topic}"
             )
             return
 
         if unit.type() != Unit.TYPE_LIGHT:
             LOGGER.debug(
-                f"Received msg from {unit.name} which is not a light (it is {unit.type()}). Ignoring.."
+                f"Received msg from {unit.name} which is not a light "
+                f"(it is {unit.type()}). Ignoring.."
             )
             return
 
@@ -74,7 +77,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         if msg.topic not in hass.data[DOMAIN]:
             LOGGER.debug(
                 f"New Casambi light detected on topic {msg.topic}, "
-                + f"creating light {unit.name} with state {unit.state.dimmer}"
+                f"creating light {unit.name} with state {unit.state.dimmer}"
             )
             light_entity = CasambiMqttLight(hass, msg.topic, network_name, unit)
             hass.data[DOMAIN][msg.topic] = light_entity
@@ -82,7 +85,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         else:
             LOGGER.debug(
                 f"Updating existing light for topic {msg.topic}, "
-                + f"updating light {unit.name} with state {unit.state.dimmer}"
+                f"updating light {unit.name} with state {unit.state.dimmer}"
             )
             light_entity: CasambiMqttLight = hass.data[DOMAIN][msg.topic]
             light_entity.update_entity(unit)
@@ -92,7 +95,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             scene = Scene.from_json(msg.payload)
         except ValueError:
             LOGGER.warning(
-                f"Invalid payload received for scene, payload: {msg.payload}, topic: {msg.topic}"
+                f"Invalid payload received for scene, payload: {msg.payload}, "
+                f"topic: {msg.topic}"
             )
             return
 
@@ -111,7 +115,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         else:
             LOGGER.debug(
                 f"Updating existing scene for topic: {msg.topic}, "
-                + f"Updating scene {scene.name} (id {scene.scene_id})"
+                f"Updating scene {scene.name} (id {scene.scene_id})"
             )
             scene_entity: CasambiMqttScene = hass.data[DOMAIN][msg.topic]
             scene_entity.update_entity(scene)

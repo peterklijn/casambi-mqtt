@@ -1,5 +1,6 @@
 from typing import Any
 
+from custom_components.casambi_mqtt.entities.commands import SetLevel, TurnOn
 from homeassistant.components import mqtt
 from homeassistant.components.light import ATTR_BRIGHTNESS, ColorMode, LightEntity
 from homeassistant.core import HomeAssistant
@@ -7,7 +8,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import DOMAIN, LIGHT_ADD_ENTITIES, MQTT_TOPIC_PREFIX
-from .entities.commands import SetLevel, TurnOn
 from .entities.entities import Unit
 
 
@@ -24,7 +24,9 @@ class CasambiMqttLight(LightEntity):
     _attr_bt_address: str
     _mqtt_network_name: str
 
-    def __init__(self, hass: HomeAssistant, topic: str, network_name: str, unit: Unit):
+    def __init__(
+        self, hass: HomeAssistant, topic: str, network_name: str, unit: Unit
+    ) -> None:
         self.hass = hass
         self._mqtt_network_name = network_name
         self._attr_name = unit.name
