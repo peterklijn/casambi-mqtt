@@ -2,11 +2,14 @@
 default_config:
 
 # https://www.home-assistant.io/integrations/homeassistant/
-homeassistant:
-  debug: true
+#homeassistant:
+#  debug: true
 
 # https://www.home-assistant.io/integrations/logger/
 logger:
-  default: info
+  default: warn
   logs:
-    custom_components.integration_blueprint: debug
+    custom_components.casambi-mqtt: debug
+
+casambi_mqtt:
+  mqtt_network_name: "default"

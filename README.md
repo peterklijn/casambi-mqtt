@@ -1,12 +1,19 @@
-# Notice
+# Home Assistant integration for Casambi using MQTT
 
-The component and platforms in this repository are not meant to be used by a
-user, but as a "blueprint" that custom component developers can build
-upon, to make more awesome stuff.
-
-HAVE FUN! 😎
+This is a Home Assistant integration for Casambi networks. It uses the 
+[unofficial Casambi Bluetooth](https://github.com/lkempf/casambi-bt)
+library, but unlike the [Casambi Bluetooth HA integration](https://github.com/lkempf/casambi-bt-hass/)
+from the same author as the library, it introduces MQTT as a middleman between the library and Home Assistant.
+This allows you to run the library on a different device than Home Assistant.
 
 ## Why?
+
+Because the device where I run Home Assistant on does not have Bluetooth :)
+
+Does your Home Assistant hardware have bluetooth? Then you're probably better off with the
+[Casambi Bluetooth HA integration](https://github.com/lkempf/casambi-bt-hass/), as this version is
+very limited. For now, it only supports dimmable lights, and scenes.
+
 
 This is simple, by having custom_components look (README + structure) the same
 it is easier for developers to help each other and for users to start using them.
@@ -14,33 +21,21 @@ it is easier for developers to help each other and for users to start using them
 If you are a developer and you want to add things to this "blueprint" that you think more
 developers will have use for, please open a PR to add it :)
 
-## What?
+## Setup
 
-This repository contains multiple files, here is a overview:
+In addition to running this integration in Home Assistant, you need to have the following:
 
-File | Purpose | Documentation
--- | -- | --
-`.devcontainer.json` | Used for development/testing with Visual Studio Code. | [Documentation](https://code.visualstudio.com/docs/remote/containers)
-`.github/ISSUE_TEMPLATE/*.yml` | Templates for the issue tracker | [Documentation](https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository)
-`custom_components/integration_blueprint/*` | Integration files, this is where everything happens. | [Documentation](https://developers.home-assistant.io/docs/creating_component_index)
-`CONTRIBUTING.md` | Guidelines on how to contribute. | [Documentation](https://help.github.com/en/github/building-a-strong-community/setting-guidelines-for-repository-contributors)
-`LICENSE` | The license file for the project. | [Documentation](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
-`README.md` | The file you are reading now, should contain info about the integration, installation and configuration instructions. | [Documentation](https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax)
-`requirements.txt` | Python packages used for development/lint/testing this integration. | [Documentation](https://pip.pypa.io/en/stable/user_guide/#requirements-files)
+- An MQTT Server
+- The [MQTT integration](https://www.home-assistant.io/integrations/mqtt/) installed and configured in Home Assistant
+- The [server](./server.py) running somewhere with Bluetooth
 
-## How?
+Copy the `.env.example` to `.env` and fill in the required fields. Don't know the Casambi Bluetooth address? 
+Run the server and it will list all Casambi networks. 
 
-1. Create a new repository in GitHub, using this repository as a template by clicking the "Use this template" button in the GitHub UI.
-1. Open your new repository in Visual Studio Code devcontainer (Preferably with the "`Dev Containers: Clone Repository in Named Container Volume...`" option).
-1. Rename all instances of the `integration_blueprint` to `custom_components/<your_integration_domain>` (e.g. `custom_components/awesome_integration`).
-1. Rename all instances of the `Integration Blueprint` to `<Your Integration Name>` (e.g. `Awesome Integration`).
-1. Run the `scripts/develop` to start HA and test out your new integration.
+## Local development
 
-## Next steps
-
-These are some next steps you may want to look into:
-- Add tests to your integration, [`pytest-homeassistant-custom-component`](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) can help you get started.
-- Add brand images (logo/icon) to https://github.com/home-assistant/brands.
-- Create your first release.
-- Share your integration on the [Home Assistant Forum](https://community.home-assistant.io/).
-- Submit your integration to [HACS](https://hacs.xyz/docs/publish/start).
+1. `docker compose up -d`
+2. Initialize Home Assistant, visit http://localhost:8123, create a user
+3. Install the MQTT integration: On the [integration page](http://localhost:8123/config/integrations/dashboard) add the integration 'MQTT'
+4. Connect to the broker, hostname = 'mosquitto'
+5. Install HACS, follow the instructions mentioned [here](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs-container), connect to the container using `docker exec -ti casambi-mqtt-homeassistant-1 bash`

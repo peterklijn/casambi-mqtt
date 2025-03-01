@@ -1,0 +1,20 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    environment: {}
+    ports:
+      - "1883:1883/tcp"
+      - "9001:9001/tcp"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+  homeassistant:
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - ./homeassistant/config:/config
+      - ./custom_components/casambi_mqtt:/config/custom_components/casambi-mqtt
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8123:8123/tcp"
+    restart: unless-stopped

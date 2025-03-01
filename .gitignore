@@ -14,5 +14,10 @@ coverage.xml
 
 
 # Home Assistant configuration
-config/*
-!config/configuration.yaml
+homeassistant/config/*
+!homeassistant/config/configuration.yaml
+
+# Casambi
+.env
+casambi-bt-store/
+mosquitto/log/*.log
