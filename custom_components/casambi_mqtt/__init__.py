@@ -41,6 +41,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     conf = config.get(DOMAIN, {})
     network_name = conf.get(CONF_NETWORK_NAME, DEFAULT_NETWORK_NAME)
+    hass.data[DOMAIN][CONF_NETWORK_NAME] = network_name
 
     hass.async_create_task(
         async_load_platform(hass, Platform.LIGHT, DOMAIN, {}, config)

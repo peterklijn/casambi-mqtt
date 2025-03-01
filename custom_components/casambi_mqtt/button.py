@@ -5,7 +5,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-from .const import CONF_NETWORK_NAME, DEFAULT_NETWORK_NAME, DOMAIN, MQTT_TOPIC_PREFIX
+from .const import CONF_NETWORK_NAME, DOMAIN, MQTT_TOPIC_PREFIX
 
 
 def setup_platform(
@@ -14,8 +14,7 @@ def setup_platform(
     async_add_entities: AddEntitiesCallback,
     discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
-    conf = config.get(DOMAIN, {})
-    network_name = conf.get(CONF_NETWORK_NAME, DEFAULT_NETWORK_NAME)
+    network_name = hass.data[DOMAIN][CONF_NETWORK_NAME]
     async_add_entities([CasambiMqttReloadButton(hass, network_name)])
 
 

@@ -13,7 +13,7 @@ services:
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
       - ./homeassistant/config:/config
-      - ./custom_components/casambi_mqtt:/config/custom_components/casambi-mqtt
+      - ./custom_components/casambi_mqtt:/config/custom_components/casambi_mqtt
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "8123:8123/tcp"
