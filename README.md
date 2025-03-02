@@ -32,6 +32,25 @@ In addition to running this integration in Home Assistant, you need to have the 
 Copy the `.env.example` to `.env` and fill in the required fields. Don't know the Casambi Bluetooth address? 
 Run the server and it will list all Casambi networks. 
 
+### Running the server with docker
+
+```yaml
+services:
+  casambi-server:
+    image: peterklijn/casambi-mqtt-server:0.0.1
+    environment:
+      MQTT_BROKER: "<broker address>"
+      MQTT_USERNAME: "<optional broker username, or remove line>"
+      MQTT_PASSWORD: "<optional broker password, or remove line>"
+      CASAMBI_NETWORK_ADDRESS: "<casambi bluetooth address>"
+      CASAMBI_NETWORK_PASSWORD: "<casambi password>"
+      CASAMBI_NETWORK_NAME: "<optional network name, used in mqtt topic>"
+    privileged: true
+    network_mode: host
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+```
+
 ## Local development
 
 1. `docker compose up -d`
