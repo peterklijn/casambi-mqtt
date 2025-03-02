@@ -5,5 +5,5 @@ ruff==0.9.9
 black==25.1.0
 dataclasses-json==0.6.7
 aiomqtt==2.3.0
-python-dotenv==1.0.1
 casambi-bt==0.2.4
+python-dotenv==1.0.1

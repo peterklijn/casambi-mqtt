@@ -31,12 +31,14 @@ from custom_components.casambi_mqtt.entities.entities import (
 if TYPE_CHECKING:
     from bleak import BLEDevice
 
-BROKER = "localhost"
-PORT = 1883
-TOPIC_PREFIX = "test/casambi"
+TOPIC_PREFIX = "casambi"
 
 load_dotenv()
-LOG_LEVEL = os.getenv("LOG_LEVEL") or "INFO"
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
+MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
+MQTT_USERNAME = os.getenv("MQTT_USERNAME")
+MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 NETWORK_ADDRESS = os.getenv("CASAMBI_NETWORK_ADDRESS")
 NETWORK_PASSWORD = os.getenv("CASAMBI_NETWORK_PASSWORD")
 NETWORK_NAME = os.getenv("CASAMBI_NETWORK_NAME")
@@ -154,7 +156,9 @@ async def main() -> None:
     try:
         await casa.connect(device, NETWORK_PASSWORD)
         LOGGER.info("Connected to Casambi network")
-        client = aiomqtt.Client(BROKER)
+        client = aiomqtt.Client(
+            MQTT_BROKER, port=MQTT_PORT, username=MQTT_USERNAME, password=MQTT_PASSWORD
+        )
         interval = 5
 
         def callback(unit: CasambiBt.Unit) -> None:

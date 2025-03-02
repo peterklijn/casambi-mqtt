@@ -21,3 +21,4 @@ homeassistant/config/*
 .env
 casambi-bt-store/
 mosquitto/log/*.log
+mosquitto/data/*.db
