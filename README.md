@@ -14,13 +14,6 @@ Does your Home Assistant hardware have bluetooth? Then you're probably better of
 [Casambi Bluetooth HA integration](https://github.com/lkempf/casambi-bt-hass/), as this version is
 very limited. For now, it only supports dimmable lights, and scenes.
 
-
-This is simple, by having custom_components look (README + structure) the same
-it is easier for developers to help each other and for users to start using them.
-
-If you are a developer and you want to add things to this "blueprint" that you think more
-developers will have use for, please open a PR to add it :)
-
 ## Setup
 
 In addition to running this integration in Home Assistant, you need to have the following:
@@ -33,6 +26,8 @@ Copy the `.env.example` to `.env` and fill in the required fields. Don't know th
 Run the server and it will list all Casambi networks. 
 
 ### Running the server with docker
+
+Here's an example of a `docker-compose.yml` file:
 
 ```yaml
 services:
