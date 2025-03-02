@@ -1,6 +1,6 @@
 services:
   mosquitto:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:2.0.20
     environment: {}
     ports:
       - "1883:1883/tcp"
