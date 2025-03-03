@@ -9,8 +9,6 @@ from typing import TYPE_CHECKING, Any
 import aiomqtt
 import CasambiBt
 from CasambiBt import Casambi, discover
-from CasambiBt._unit import UnitControl as BtUnitControl
-from CasambiBt._unit import UnitType as BtUnitType
 from dotenv import load_dotenv
 
 from custom_components.casambi_mqtt.entities.commands import (
@@ -64,13 +62,13 @@ def to_unit_control_type(t: CasambiBt.UnitControlType) -> UnitControlType:
     return UnitControlType(t.name, t.value)
 
 
-def to_unit_control(c: BtUnitControl) -> UnitControl:
+def to_unit_control(c: CasambiBt.UnitControl) -> UnitControl:
     return UnitControl(
         c.default, c.length, c.offset, c.readonly, to_unit_control_type(c.type)
     )
 
 
-def to_unit_type(t: BtUnitType) -> UnitType:
+def to_unit_type(t: CasambiBt.UnitType) -> UnitType:
     return UnitType(
         t.id,
         t.manufacturer,
