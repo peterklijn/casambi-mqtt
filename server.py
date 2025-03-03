@@ -124,6 +124,7 @@ async def process_command(
                         client.publish(
                             f"{TOPIC_PREFIX}/{NETWORK_NAME}/scenes/{scene_entity.scene_id}",
                             payload=scene_entity.to_json(),
+                            qos=1,
                             retain=True,
                         )
                     )
@@ -168,6 +169,7 @@ async def main() -> None:
                     client.publish(
                         f"{TOPIC_PREFIX}/{NETWORK_NAME}/events/{unit.address}",
                         payload=entity.to_json(),
+                        qos=1,
                         retain=True,
                     )
                 )

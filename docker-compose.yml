@@ -4,7 +4,6 @@ services:
     environment: {}
     ports:
       - "1883:1883/tcp"
-      - "9001:9001/tcp"
     volumes:
       - ./mosquitto/config:/mosquitto/config
       - ./mosquitto/data:/mosquitto/data
