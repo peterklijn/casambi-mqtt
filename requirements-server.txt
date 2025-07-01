@@ -1,4 +1,4 @@
 dataclasses-json==0.6.7
 aiomqtt==2.3.0
 casambi-bt==0.2.5
-python-dotenv==1.0.1
+python-dotenv==1.1.1
