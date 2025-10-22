@@ -1,5 +1,4 @@
 import voluptuous as vol
-
 from homeassistant.components.mqtt import ReceiveMessage, async_subscribe
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
