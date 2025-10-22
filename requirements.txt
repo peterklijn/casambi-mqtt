@@ -2,7 +2,7 @@ colorlog==6.9.0
 homeassistant==2025.2.4
 pip>=21.3.1
 ruff==0.9.9
-black==25.1.0
+black==25.9.0
 dataclasses-json==0.6.7
 aiomqtt==2.4.0
 casambi-bt==0.2.5
