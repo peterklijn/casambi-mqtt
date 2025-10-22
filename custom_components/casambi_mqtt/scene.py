@@ -1,11 +1,12 @@
 from typing import Any
 
-from custom_components.casambi_mqtt.entities.commands import SetScene
 from homeassistant.components import mqtt
 from homeassistant.components.scene import Scene as HAScene
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+
+from custom_components.casambi_mqtt.entities.commands import SetScene
 
 from .const import DOMAIN, MQTT_TOPIC_PREFIX, SCENE_ADD_ENTITIES
 from .entities.entities import Scene
