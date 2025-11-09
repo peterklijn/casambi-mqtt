@@ -2,9 +2,9 @@ from typing import Any
 
 from homeassistant.components import mqtt
 from homeassistant.components.light import ATTR_BRIGHTNESS, ColorMode, LightEntity
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from custom_components.casambi_mqtt.entities.commands import SetLevel, TurnOn
 
@@ -12,11 +12,8 @@ from .const import DOMAIN, LIGHT_ADD_ENTITIES, MQTT_TOPIC_PREFIX
 from .entities.entities import Unit
 
 
-def setup_platform(
-    hass: HomeAssistant,
-    config: ConfigType,
-    async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     hass.data[DOMAIN][LIGHT_ADD_ENTITIES] = async_add_entities
 

@@ -1,9 +1,6 @@
 # https://www.home-assistant.io/integrations/default_config/
+# Loads default set of integrations. Do not remove.
 default_config:
-
-# https://www.home-assistant.io/integrations/homeassistant/
-#homeassistant:
-#  debug: true
 
 # https://www.home-assistant.io/integrations/logger/
 logger:
@@ -11,5 +8,11 @@ logger:
   logs:
     custom_components.casambi_mqtt: debug
 
-casambi_mqtt:
-  mqtt_network_name: "default"
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

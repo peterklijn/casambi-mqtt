@@ -1,19 +1,16 @@
 from homeassistant.components import mqtt
 from homeassistant.components.button import ButtonEntity
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from custom_components.casambi_mqtt.entities.commands import PublishEntities
 
-from .const import CONF_NETWORK_NAME, DOMAIN, MQTT_TOPIC_PREFIX
+from .const import CONF_NETWORK_NAME, DOMAIN, LOGGER, MQTT_TOPIC_PREFIX
 
 
-def setup_platform(
-    hass: HomeAssistant,
-    config: ConfigType,
-    async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     network_name = hass.data[DOMAIN][CONF_NETWORK_NAME]
     async_add_entities([CasambiMqttReloadButton(hass, network_name)])
@@ -30,6 +27,7 @@ class CasambiMqttReloadButton(ButtonEntity):
         self._attr_icon = "mdi:cloud-download"
 
     async def async_press(self) -> None:
+        LOGGER.info("Triggering reload for %s", self._mqtt_network_name)
         await mqtt.async_publish(
             self.hass,
             f"{MQTT_TOPIC_PREFIX}/{self._mqtt_network_name}/commands",

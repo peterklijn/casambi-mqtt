@@ -1,9 +1,7 @@
-import voluptuous as vol
 from homeassistant.components.mqtt import ReceiveMessage, async_subscribe
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
@@ -19,38 +17,26 @@ from .entities.entities import Scene, Unit
 from .light import CasambiMqttLight
 from .scene import CasambiMqttScene
 
-CONFIG_SCHEMA = vol.Schema(
-    {
-        DOMAIN: vol.Schema(
-            {
-                vol.Optional(
-                    CONF_NETWORK_NAME, default=DEFAULT_NETWORK_NAME
-                ): cv.string,
-            }
-        )
-    },
-    extra=vol.ALLOW_EXTRA,
-)
+PLATFORMS: list[Platform] = [Platform.LIGHT, Platform.BUTTON, Platform.SCENE]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """YAML setup (unused)."""
+    return True
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][LIGHT_ADD_ENTITIES] = None
     hass.data[DOMAIN][SCENE_ADD_ENTITIES] = None
 
-    conf = config.get(DOMAIN, {})
-    network_name = conf.get(CONF_NETWORK_NAME, DEFAULT_NETWORK_NAME)
+    network_name = entry.options.get(
+        CONF_NETWORK_NAME, entry.data.get(CONF_NETWORK_NAME, DEFAULT_NETWORK_NAME)
+    )
+
     hass.data[DOMAIN][CONF_NETWORK_NAME] = network_name
 
-    hass.async_create_task(
-        async_load_platform(hass, Platform.LIGHT, DOMAIN, {}, config)
-    )
-    hass.async_create_task(
-        async_load_platform(hass, Platform.BUTTON, DOMAIN, {}, config)
-    )
-    hass.async_create_task(
-        async_load_platform(hass, Platform.SCENE, DOMAIN, {}, config)
-    )
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     async def event_processor(msg: ReceiveMessage) -> None:
         try:

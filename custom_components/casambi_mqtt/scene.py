@@ -2,9 +2,9 @@ from typing import Any
 
 from homeassistant.components import mqtt
 from homeassistant.components.scene import Scene as HAScene
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from custom_components.casambi_mqtt.entities.commands import SetScene
 
@@ -12,11 +12,8 @@ from .const import DOMAIN, MQTT_TOPIC_PREFIX, SCENE_ADD_ENTITIES
 from .entities.entities import Scene
 
 
-def setup_platform(
-    hass: HomeAssistant,
-    config: ConfigType,
-    async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     hass.data[DOMAIN][SCENE_ADD_ENTITIES] = async_add_entities
 
