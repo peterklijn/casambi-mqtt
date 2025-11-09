@@ -1,0 +1,22 @@
+{
+    "config": {
+        "step": {
+            "init": {
+                "description": "{restart_note}",
+                "data": {
+                    "mqtt_network_name": "MQTT network name"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "description": "{restart_note}",
+                "data": {
+                    "mqtt_network_name": "MQTT network name"
+                }
+            }
+        }
+    }
+}

@@ -22,17 +22,16 @@ In addition to running this integration in Home Assistant, you need to have the 
 - The [MQTT integration](https://www.home-assistant.io/integrations/mqtt/) installed and configured in Home Assistant
 - The [server](./server.py) running somewhere with Bluetooth
 
-Copy the `.env.example` to `.env` and fill in the required fields. Don't know the Casambi Bluetooth address? 
-Run the server and it will list all Casambi networks. 
+You need to run the server, as this communicates with your Casambi network over bluetooth. You can do so in two ways:
 
-### Running the server with docker
+### Running the server using docker compose
 
-Here's an example of a `docker-compose.yml` file:
+Just create a `docker-compose.yml` file, and specify the casambi server like so:
 
 ```yaml
 services:
   casambi-server:
-    image: peterklijn/casambi-mqtt-server:0.0.1
+    image: peterklijn/casambi-mqtt-server:0.0.3
     environment:
       MQTT_BROKER: "<broker address>"
       MQTT_USERNAME: "<optional broker username, or remove line>"
@@ -45,6 +44,25 @@ services:
     volumes:
       - /var/run/dbus:/var/run/dbus
 ```
+
+Don't know the Casambi Bluetooth address? 
+Run the server and it will list all Casambi networks. 
+
+### Running the server from source
+
+You can also run the server from source, for which you need to clone this repo, copy the `.env.example` file and `.env` and change the values, and start the server.
+
+```bash
+cp .env.example .env
+```
+Then change the values in the `.env` file, and run the server.
+
+```bash
+python server.py
+```
+
+Don't know the Casambi Bluetooth address? 
+Run the server and it will list all Casambi networks. 
 
 ## Local development
 
