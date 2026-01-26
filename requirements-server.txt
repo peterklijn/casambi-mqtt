@@ -1,4 +1,4 @@
 dataclasses-json==0.6.7
 aiomqtt==2.4.0
-casambi-bt==0.2.5
+casambi-bt==0.3.1
 python-dotenv==1.2.1
