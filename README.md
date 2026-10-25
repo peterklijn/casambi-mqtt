@@ -31,7 +31,7 @@ Just create a `docker-compose.yml` file, and specify the casambi server like so:
 ```yaml
 services:
   casambi-server:
-    image: peterklijn/casambi-mqtt-server:0.0.3
+    image: peterklijn/casambi-mqtt-server:0.0.4
     environment:
       MQTT_BROKER: "<broker address>"
       MQTT_USERNAME: "<optional broker username, or remove line>"
@@ -74,7 +74,7 @@ Manage python with [PyEnv](https://github.com/pyenv/pyenv) and PipEnv:
 brew install pyenv pipenv
 ```
 
-PyEnv uses `.python-version` (set by `pyenv local 3.13`), verify that the correct python is used with `python --version`.
+PyEnv uses `.python-version` (set by `pyenv local 3.14`), verify that the correct python is used with `python --version`.
 
 
 ### Running a test home assistant setup
