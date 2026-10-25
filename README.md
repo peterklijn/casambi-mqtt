@@ -1,6 +1,6 @@
 # Home Assistant integration for Casambi using MQTT
 
-This is a Home Assistant integration for Casambi networks. It uses the 
+This is a Home Assistant integration for Casambi networks. It uses the
 [unofficial Casambi Bluetooth](https://github.com/lkempf/casambi-bt)
 library, but unlike the [Casambi Bluetooth HA integration](https://github.com/lkempf/casambi-bt-hass/)
 from the same author as the library, it introduces MQTT as a middleman between the library and Home Assistant.
@@ -45,8 +45,8 @@ services:
       - /var/run/dbus:/var/run/dbus
 ```
 
-Don't know the Casambi Bluetooth address? 
-Run the server and it will list all Casambi networks. 
+Don't know the Casambi Bluetooth address?
+Run the server and it will list all Casambi networks.
 
 ### Running the server from source
 
@@ -61,13 +61,34 @@ Then change the values in the `.env` file, and run the server.
 python server.py
 ```
 
-Don't know the Casambi Bluetooth address? 
-Run the server and it will list all Casambi networks. 
+Don't know the Casambi Bluetooth address?
+Run the server and it will list all Casambi networks.
 
 ## Local development
+
+### Repo setup
+
+Manage python with [PyEnv](https://github.com/pyenv/pyenv) and PipEnv:
+
+```bash
+brew install pyenv pipenv
+```
+
+PyEnv uses `.python-version` (set by `pyenv local 3.13`), verify that the correct python is used with `python --version`.
+
+
+### Running a test home assistant setup
 
 1. `docker compose up -d`
 2. Initialize Home Assistant, visit http://localhost:8123, create a user
 3. Install the MQTT integration: On the [integration page](http://localhost:8123/config/integrations/dashboard) add the integration 'MQTT'
 4. Connect to the broker, hostname = 'mosquitto'
 5. Install HACS, follow the instructions mentioned [here](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs-container), connect to the container using `docker exec -ti casambi-mqtt-homeassistant-1 bash`
+
+
+### Run repo validation
+
+```bash
+python -m ruff check .
+python -m ruff format . --check
+```
